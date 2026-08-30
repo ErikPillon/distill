@@ -10,6 +10,8 @@ export interface GraphEdge {
 
 export interface GraphNode {
   id: string;
+  /** Short card headline — the label you can read at graph zoom. */
+  title: string;
   claim: string;
   /** Inherited from the first source, so clusters read as "the Dalio cluster". */
   accent: string;
@@ -65,6 +67,7 @@ export async function buildGraph() {
 
     return {
       id: n.id,
+      title: n.data.title,
       claim: n.data.claim,
       accent: n.data.sources.length
         ? (sourceById.get(n.data.sources[0])?.accent ?? '#6b6b76')

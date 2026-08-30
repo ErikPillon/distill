@@ -51,3 +51,5 @@ And "nobody is crazy" is generous to the point of being unfalsifiable. Some fina
 ## The distilled principle
 
 > Your rate of return matters less than the number of years you never had to interrupt it.
+
+

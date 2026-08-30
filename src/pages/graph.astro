@@ -21,6 +21,7 @@ const relCounts = Object.fromEntries(
 const payload = {
   nodes: nodes.map((n) => ({
     id: n.id,
+    title: n.title,
     claim: n.claim,
     accent: n.accent,
     topics: n.topics,
@@ -153,11 +154,14 @@ const orphans = nodes.filter((n) => n.degree === 0);
         var r = 26 * Math.sqrt(i + 1);
         return {
           id: n.id,
+          title: n.title,
           claim: n.claim,
           accent: n.accent,
           topics: n.topics,
           sources: n.sources,
-          label: n.id.replace(/-/g, ' '),
+          // The authored headline, not the slug — a graph you can read at a
+          // glance is the whole point of giving every note a short title.
+          label: n.title,
           radius: Math.min(22, 6 + n.degree * 2.2),
           x: Math.cos(i * GOLDEN) * r,
           y: Math.sin(i * GOLDEN) * r,
@@ -419,6 +423,9 @@ const orphans = nodes.filter((n) => n.degree === 0);
           })
           .join(' · ');
         inspector.innerHTML =
+          '<p class="inspector-title">' +
+          esc(n.title) +
+          '</p>' +
           '<p class="inspector-claim">' +
           esc(n.claim) +
           '</p>' +

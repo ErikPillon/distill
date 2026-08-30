@@ -28,8 +28,9 @@ const sparks = (await getCollection('notes'))
   <section class="wrap hero">
     <h1>The ideas worth remembering,<br />distilled.</h1>
     <p>
-      A personal library of the most insightful books — read closely, boiled
-      down to what matters, and wired together so ideas talk to each other.
+      A second brain built one atomic note at a time — everything I've read,
+      boiled down to single claims and wired together so the ideas argue with
+      each other.
     </p>
   </section>
 
@@ -76,7 +77,9 @@ const sparks = (await getCollection('notes'))
   <section class="wrap">
     <div class="section-head">
       <h2>Library</h2>
-      <span class="count">{all.length} summaries</span>
+      <span class="count">
+        {all.length} {all.length === 1 ? 'source' : 'sources'}
+      </span>
     </div>
     <div class="grid">
       {

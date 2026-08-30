@@ -17,11 +17,20 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
 
-// Atomic notes live in their own collection, so a book's principles are a
-// query rather than duplicated frontmatter.
-const notes = (await getCollection('notes'))
-  .filter((n) => !n.data.draft && n.data.sources.includes(entry.id))
-  .sort((a, b) => a.id.localeCompare(b.id));
+// Every atomic note that cites this source. The book's ideas are a query, not
+// duplicated frontmatter — which is what keeps the deck and the graph in sync.
+const notes = (await getCollection('notes')).filter(
+  (n) => !n.data.draft && n.data.sources.includes(entry.id),
+);
+const byId = new Map(notes.map((n) => [n.id, n]));
+
+// The deck is the authored reading order. Anything citing this source but left
+// out of `cards` is still part of the graph — it just isn't on the guided path.
+const deck = d.cards.map((id) => byId.get(id)).filter((n) => n !== undefined);
+const inDeck = new Set(deck.map((n) => n.id));
+const rest = notes
+  .filter((n) => !inDeck.has(n.id))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
 
 // Resolve connection slugs → titles so we can render nice link cards.
 const all = await getCollection('summaries');
@@ -74,22 +83,114 @@ const stars = d.rating ? '★'.repeat(d.rating) + '☆'.repeat(5 - d.rating) : n
       </div>
     </div>
 
+    {d.summary && <p class="deck-intro">{d.summary}</p>}
+
+    {
+      deck.length > 0 && (
+        <>
+          <div class="deck-head">
+            <h2>The deck</h2>
+            <span class="deck-count">
+              {deck.length} cards · swipe or use ← →
+            </span>
+          </div>
+          <div class="deck" id="deck">
+            {deck.map((n, i) => (
+              <a class="card" href={`/notes/${n.id}/`}>
+                <p class="card-num">
+                  {i + 1} / {deck.length}
+                </p>
+                <h3 class="card-title">{n.data.title}</h3>
+                <p class="card-claim">{n.data.claim}</p>
+                <div class="card-foot">
+                  {n.body?.trim() && <p class="card-take">{n.body.trim()}</p>}
+                  {n.data.links.length > 0 && (
+                    <ul class="card-links">
+                      {n.data.links.map((l) => (
+                        <li>
+                          {l.rel} → {byId.get(l.to)?.data.title ?? l.to}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </a>
+            ))}
+          </div>
+          <div class="deck-dots" id="deck-dots">
+            {deck.map((_, i) => <span data-on={i === 0 ? '' : undefined} />)}
+          </div>
+          <script is:inline>
+            (function () {
+              var deck = document.getElementById('deck');
+              var dots = document.getElementById('deck-dots');
+              if (!deck || !dots) return;
+              var cards = deck.querySelectorAll('.card');
+              var marks = dots.querySelectorAll('span');
+
+              // Highlight whichever card is nearest the left edge — that's the
+              // one the scroll-snap has settled on.
+              function sync() {
+                var best = 0;
+                var min = Infinity;
+                for (var i = 0; i < cards.length; i++) {
+                  var d = Math.abs(
+                    cards[i].getBoundingClientRect().left -
+                      deck.getBoundingClientRect().left,
+                  );
+                  if (d < min) {
+                    min = d;
+                    best = i;
+                  }
+                }
+                for (var j = 0; j < marks.length; j++) {
+                  if (j === best) marks[j].setAttribute('data-on', '');
+                  else marks[j].removeAttribute('data-on');
+                }
+                return best;
+              }
+              deck.addEventListener('scroll', function () {
+                window.requestAnimationFrame(sync);
+              });
+
+              // Arrow keys page the deck, but only once it's actually on screen
+              // — otherwise they'd hijack scrolling the rest of the article.
+              document.addEventListener('keydown', function (e) {
+                if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+                var box = deck.getBoundingClientRect();
+                if (box.bottom < 0 || box.top > window.innerHeight) return;
+                var next = sync() + (e.key === 'ArrowRight' ? 1 : -1);
+                if (next < 0 || next >= cards.length) return;
+                e.preventDefault();
+                cards[next].scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                  inline: 'start',
+                });
+              });
+            })();
+          </script>
+        </>
+      )
+    }
+
     <div class="prose">
       <Content />
     </div>
 
     {
-      notes.length > 0 && (
+      rest.length > 0 && (
         <div class="panel">
-          <h2>Key principles</h2>
+          <h2>Also from this book</h2>
           <p class="panel-sub">
-            Atomic notes — each one is a node in the <a href="/graph">graph</a>.
+            Notes that didn't make the guided path but are still nodes in the{' '}
+            <a href="/graph">graph</a>.
           </p>
-          {notes.map((p, i) => (
+          {rest.map((p) => (
             <a class="principle principle-link" href={`/notes/${p.id}/`}>
-              <span class="num">{i + 1}</span>
+              <span class="num">·</span>
               <p class="ptext">
-                {p.data.claim}
+                <strong>{p.data.title}</strong> — {p.data.claim}
                 <span class="pid">
                   #{p.id}
                   {p.data.links.length > 0 &&

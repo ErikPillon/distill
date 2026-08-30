@@ -50,6 +50,15 @@ const summaries = defineCollection({
     readDate: z.coerce.date().optional(),
     draft: z.boolean().default(false),
 
+    // The deck. Ordered ids from the `notes` collection — this is the reading
+    // sequence, and the only place order lives. A note can appear in more than
+    // one source's deck; the note itself stays order-free, which is what lets
+    // it belong to several books at once.
+    //
+    // Deliberately explicit rather than "every note citing this source": the
+    // order IS the summary. Sequencing the cards is the editorial work.
+    cards: z.array(z.string()).default([]),
+
     // Source-level narrative links. These are the essay-length "how do these
     // two books argue with each other" notes — deliberately kept separate from
     // note-level links, which are precise and typed.
@@ -67,8 +76,12 @@ const summaries = defineCollection({
 const notes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
   schema: z.object({
-    // The whole note in one sentence, in your own words. This is the node
-    // label in the graph, so if it needs an "and", it's probably two notes.
+    // Three-to-five word handle for the idea. It's the card headline and the
+    // graph label, so it has to be recognisable at a glance and out of context.
+    title: z.string(),
+
+    // The whole note in one sentence, in your own words. If it needs an "and",
+    // it's probably two notes.
     claim: z.string(),
 
     // Which sources this idea came from — ids in the `summaries` collection.

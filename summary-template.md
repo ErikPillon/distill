@@ -1,59 +1,62 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SOURCE TEMPLATE  (book · article · video)
-# Copy this file into src/content/summaries/your-source-slug.md
+# Copy into src/content/summaries/your-source-slug.md
 # The filename (minus .md) becomes the URL and the id that notes
-# and other sources reference. Keep it lowercase-with-dashes.
+# reference. Keep it lowercase-with-dashes.
 #
-# This file is the SOURCE. The atomic ideas from it are separate
-# files in src/content/notes/ — see note-template.md.
+# This file is the SOURCE and its bookends. The ideas themselves are
+# separate files in src/content/notes/ — see note-template.md.
 # ─────────────────────────────────────────────────────────────
 
 title: Source Title
 author: Author Name
-oneLine: "One distilled sentence — the hook. Quote it if it contains a colon."
-summary: "A 1–2 sentence teaser shown on the library card."
+oneLine: "One distilled sentence — the hook."
+summary: "1–2 sentences. Renders above the deck and on the library card."
 
 kind: book            # book | article | video
 # sourceUrl: https://...   # permalink for articles and videos
 
 cover: "📘"          # any emoji — your lightweight cover
-accent: "#4f46e5"    # hex color that tints this source's card + page
-                     # also colors its notes in the graph, so pick
-                     # something you'll recognize as a cluster
+accent: "#4f46e5"    # tints this source's card, page, and its notes in
+                     # the graph — pick something you'll recognise as a cluster
 
-topics: ["topic-one", "topic-two"]   # drives the Topics pages + cross-linking
-readingTime: 7        # minutes to read YOUR summary
+topics: ["topic-one", "topic-two"]
+readingTime: 7        # minutes to read YOUR deck
 rating: 4             # optional, your personal 1–5
-publishDate: 2026-01-01   # when you publish the summary (drives ordering)
-readDate: 2026-01-01      # optional, when you consumed the source
+publishDate: 2026-01-01
+readDate: 2026-01-01      # optional; omit rather than guessing
+
+# ── THE DECK ────────────────────────────────────────────────
+# 8–14 note ids, in reading order. This is the guided path, not the
+# whole book — every other note citing this source still lives in the
+# graph and renders under "Also from this book".
+#
+# Sequencing is the editorial work. If the order doesn't matter,
+# you haven't found the argument yet.
+cards:
+  - first-note-slug
+  - second-note-slug
 
 # Source-level narrative links: the essay-length "how do these two
-# argue with each other" take. Precise note-to-note links live in
-# the note files instead.
+# argue with each other" take. Precise note-to-note links live in the
+# note files instead.
 connections:
   - slug: some-other-source-slug
     note: "How this source agrees with / contradicts / completes that one."
 ---
 
-## The one idea
+## My verdict
 
-Open with the single load-bearing insight of the book, in your voice.
-
-## How it works
-
-The mechanics. What's the argument, the model, the method?
-
-## My take
-
-Your personal verdict — this section is what separates you from an AI summary
-farm. What landed? What would you tell a friend?
+What actually changed — concrete, first person, about your behaviour rather
+than the book's quality. "I stopped X and started Y" beats "insightful and
+well-written".
 
 ## Where it gets thin
 
-The steelman of the critics. What does the book overclaim, ignore, or get wrong?
-(This is one of the "sections the original book didn't have.")
+The steelman of the critics. What does it overclaim, ignore, or get wrong?
+Non-negotiable: a library with no criticism in it is a library of marketing copy.
 
 ## The distilled principle
 
-> End with one quotable line someone could pin to their wall.
+> One quotable line someone could pin to their wall.

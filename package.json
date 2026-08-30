@@ -8,11 +8,18 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "doctor": "node scripts/doctor.mjs",
+    "note": "node scripts/new-note.mjs",
+    "worklist": "node scripts/worklist.mjs",
+    "link": "node scripts/link.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^7.2.2"
+  },
+  "devDependencies": {
+    "js-yaml": "^4.1.0"
   }
 }

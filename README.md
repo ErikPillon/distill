@@ -1,8 +1,8 @@
 # Distil
 
-A personal library of distilled book ideas — read closely, boiled down, and wired together so ideas talk to each other. Built with [Astro](https://astro.build). Content is plain Markdown, so writing a new summary is just adding a file.
+A digital second brain: a Zettelkasten of atomic notes from everything I read, wired together with typed links, and rendered as swipeable idea decks. Built with [Astro](https://astro.build). Content is plain Markdown, so the whole library is greppable, diffable, and portable to whatever reads it next.
 
-This is **Phase 1**: a fast, static reading experience that deploys free on Vercel. The data model is already designed to grow into logins, reading stats, and subscriptions without a rewrite (see Roadmap).
+**The library only contains what I actually captured while reading.** Nothing is filled in from summaries elsewhere — a gap in a book's notes is real information about what landed.
 
 ---
 
@@ -38,17 +38,39 @@ Untyped links are the one real weakness of Obsidian's graph — they decay into 
 
 Declare each link **once**, on whichever note it reads more naturally from. The reverse direction is derived at build time, so there's never a pair of frontmatter blocks to keep in sync.
 
-## Your weekly ritual
+## The deck
 
-1. **Add the source.** Copy `summary-template.md` into `src/content/summaries/<slug>.md`. The filename is the URL and the id notes point at.
-2. **Split out the ideas.** For each atomic claim, copy `note-template.md` into `src/content/notes/<slug>.md` with `sources: ["<source-slug>"]`. They appear on the source page automatically — nothing to list twice.
-3. **Link them.** Add `links:` entries with a `rel:` and a `note:` explaining *why* the edge exists. Pointing at a note that doesn't exist yet is fine: `/graph` lists those under **Loose ends** as your to-write queue, alongside notes with no links at all.
+A source's summary is not an essay — it's an ordered **deck of cards**, and every card *is* one atomic note. The `cards:` array in the source frontmatter is the reading order:
 
-Step 3 is the one that compounds. Steps 1 and 2 are transcription; step 3 is thinking.
+```yaml
+cards:
+  - behaviour-beats-technique   # the thesis
+  - nobody-is-crazy             # why it varies
+  - duration-beats-rate         # the engine
+```
+
+Write once, get three things: a node in the graph, a card in the deck, and a row on the topic page. The deck is a *curated path* (8–14 cards), not everything — the rest of a book's notes still live in the graph and render under "Also from this book".
+
+Two prose bookends wrap it: `summary:` above the deck, and a body of **My verdict** / **Where it gets thin** / **The distilled principle** below it.
+
+This is also what makes the future iOS app cheap: it's a renderer over the same Markdown, not a second content system.
+
+## The ritual
+
+1. **Capture** while reading, into `capture/<slug>.md`. Fragments and typos are fine — speed over structure. Add a locator (`p. 84`, `ch. 3`, `18:42`) to anything you'll want to find again.
+2. **Distil** — run `/distill capture/<slug>.md` in Claude Code. It splits the capture into atomic claims, drafts each note in your voice, dedupes against the existing graph, proposes typed links, and sequences the deck. The full process is written out in [`.claude/skills/distill/SKILL.md`](.claude/skills/distill/SKILL.md) if you'd rather do it by hand.
+3. **Edit the voice.** The draft is a draft. The bodies are your takes and have to sound like you.
+4. **Link deliberately.** Step 4 is the one that compounds — 1 and 2 are transcription, this is thinking. Pointing at a note that doesn't exist yet is fine: `/graph` lists those under **Loose ends** as your to-write queue.
+
+### Graph health
+
+After a pass, check: no orphan notes, `supports` under half of all edges (it's the lazy default — reach for `prerequisite-of` or `example-of` first), and **at least one `contradicts` per source**. A graph you've only ever agreed with isn't thinking, it's filing.
 
 ## Project structure
 
 ```
+capture/                ← raw reading notes, unstructured (the inbox)
+archive/                ← superseded content, outside the content collections
 src/
   content/
     summaries/          ← sources: books, articles, videos
@@ -68,7 +90,10 @@ src/
   styles/global.css     ← the whole design system (CSS variables, light/dark)
 summary-template.md     ← copy this to add a source
 note-template.md        ← copy this to add an atomic note
+.claude/skills/distill/ ← the capture → notes → graph process, as a skill
 ```
+
+`archive/` holds the seeded corpus this repo started from — 21 sources and 90 notes that were generated rather than read. It sits outside `src/content/`, so it doesn't build and doesn't pollute the graph, but it's still there to mine when a book gets read for real.
 
 The graph is a hand-rolled force simulation on `<canvas>` — no dependencies. Node color is inherited from its first source, node size is its link count, and the layout is seeded deterministically so it looks the same on every reload and you can build spatial memory of where your ideas live.
 
@@ -98,10 +123,10 @@ Once live, set your real domain in `astro.config.mjs` (`site:`) so the sitemap a
 
 ## Roadmap
 
-**Phase 1 — reading (this repo).** Static, fast, free. Markdown in, polished reading out.
+**Phase 1 — the second brain (this repo).** Capture, atomise, link, publish. Static, fast, free.
 
-**Phase 2 — engagement.** Add a database + auth (Supabase or Vercel Postgres both have generous free tiers) for logins, reading progress, streaks, and spaced-repetition resurfacing of individual notes. Astro adds interactive React "islands" only where needed — no rewrite.
+**Phase 2 — the reader app.** A native iOS app over the same content. The build already emits everything it needs: `cards:` is the swipe order, `title` + `claim` + body is a card, and `links` is the "related ideas" tray. The work is a build step that writes `dist/api/library.json` and a SwiftUI app that renders it — no second CMS, no server.
 
-**Phase 3 — subscriptions.** Add Stripe on top of the existing auth. A weekend once Phase 2 exists.
+**Phase 3 — spaced repetition.** Resurface individual notes over time. Notes are already atomic, dated, and typed, which is the hard prerequisite; the rest is a scheduling table.
 
-The single decision that makes all three phases share one codebase: **every summary is richly-structured Markdown**, so the static site and the future app read from the same well-typed source.
+The decision that makes all three share one source of truth: **the note is the unit, not the summary.** A summary is a query over notes. That's why the app is a renderer rather than a rewrite.

@@ -593,11 +593,18 @@ a.chip:hover {
   color: var(--text-faint);
   font-size: 0.85rem;
 }
+.inspector-title {
+  font-weight: 650;
+  font-size: 1.02rem;
+  line-height: 1.3;
+  margin: 0 0 6px;
+}
 .inspector-claim {
   font-family: var(--font-serif);
-  font-size: 1rem;
+  font-size: 0.94rem;
   line-height: 1.45;
   margin: 0 0 8px;
+  color: var(--text-muted);
 }
 .inspector-src {
   color: var(--text-faint);
@@ -696,7 +703,10 @@ a.chip:hover {
 
 /* ---------- Back link ---------- */
 .back {
-  display: inline-flex;
+  /* `flex` rather than `inline-flex` so the kicker that follows starts on its
+     own line — inline-flex left them running together on every reader page. */
+  display: flex;
+  width: fit-content;
   align-items: center;
   gap: 6px;
   color: var(--text-muted);
@@ -716,4 +726,154 @@ a.chip:hover {
   .hero {
     padding: 36px 0 20px;
   }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   The deck — a source's summary rendered as swipeable idea cards.
+   One card is one atomic note, so the reader and the graph are fed by the
+   same file and can never drift apart.
+   ───────────────────────────────────────────────────────────────────── */
+
+.deck-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 40px 0 12px;
+}
+.deck-head h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+}
+.deck-head .deck-count {
+  color: var(--text-faint);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.deck {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(420px, 84vw);
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 4px;
+  padding: 4px 4px 18px;
+  margin: 0 -4px;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+.deck::-webkit-scrollbar {
+  height: 6px;
+}
+.deck::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+
+.card {
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  min-height: 340px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 14px;
+  background: var(--surface);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+.card-num {
+  font-size: 0.74rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+  margin: 0 0 14px;
+}
+.card-title {
+  font-size: 1.22rem;
+  font-weight: 650;
+  line-height: 1.25;
+  margin: 0 0 10px;
+}
+.card-claim {
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+.card-take {
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.card-take::before {
+  content: 'my take';
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 6px;
+}
+.card-links {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.card-links li {
+  font-size: 0.74rem;
+  color: var(--text-faint);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 2px 9px;
+}
+.card-foot {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+/* Progress dots — the "you are here" of a deck. */
+.deck-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: -6px 0 0;
+}
+.deck-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--border);
+  transition: background 0.2s ease;
+}
+.deck-dots span[data-on] {
+  background: var(--accent);
+}
+
+.deck-intro {
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 24px 0 0;
+  max-width: 62ch;
 }
