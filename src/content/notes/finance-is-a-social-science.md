@@ -6,7 +6,7 @@ locator: "Intro"
 topics: ["behavioural-economics", "human-drives"]
 links:
   - to: macroeconomy-behaves-in-cycles
-    rel: supports
+    rel: prerequisite-of
     note: "Different humans of different generations under the same situation behave in the same way; yet we feel unprepared because cycles might be so long that we might experience one cycle only in our lifetime."
 ---
 
