@@ -15,8 +15,11 @@ const fail = [];
 const warn = [];
 const info = [];
 
+const sourceIds = new Set(sources.map((s) => s.id));
+
 // ── Per-note structure ────────────────────────────────────────────────────
 const edges = [];
+const dangleOnly = new Set();
 for (const n of notes) {
   const d = n.data;
   if (!d.title) fail.push(`${n.id}: missing \`title\``);
@@ -39,19 +42,43 @@ for (const n of notes) {
 
   if (!d.topics?.length) warn.push(`${n.id}: no topics`);
 
+  // `sources` is just an array of strings to the schema, so a source that
+  // doesn't exist is dropped silently when the page renders. Catch it here.
+  for (const src of d.sources ?? [])
+    if (!sourceIds.has(src))
+      warn.push(
+        `${n.id}: source "${src}" has no file in ${SOURCES} — it renders as ` +
+          `nothing until that source exists`,
+      );
+
+  if (d.locator === '') info.push(`${n.id}: empty \`locator\` — drop the line`);
+
+  // An unfilled scaffold renders as a blank card.
+  if (!n.body || /^<!--[\s\S]*-->$/.test(n.body.trim()))
+    warn.push(`${n.id}: body is still the placeholder — the card will be empty`);
+
+  let resolved = 0;
   for (const l of d.links ?? []) {
     if (l.to === n.id) fail.push(`${n.id}: links to itself`);
     else if (!ids.has(l.to)) warn.push(`${n.id}: dangling link → ${l.to}`);
-    else edges.push({ from: n.id, to: l.to, rel: l.rel });
+    else {
+      resolved++;
+      edges.push({ from: n.id, to: l.to, rel: l.rel });
+    }
     if (!l.note) warn.push(`${n.id} → ${l.to}: no \`note:\` explaining the edge`);
   }
+  if ((d.links ?? []).length && !resolved) dangleOnly.add(n.id);
 }
 
 // ── Orphans ───────────────────────────────────────────────────────────────
 const touched = new Set(edges.flatMap((e) => [e.from, e.to]));
 const orphans = notes.filter((n) => !touched.has(n.id));
 for (const o of orphans)
-  warn.push(`${o.id}: no links in or out — an idea you haven't finished`);
+  warn.push(
+    dangleOnly.has(o.id)
+      ? `${o.id}: every link dangles — nothing connects it to the graph yet`
+      : `${o.id}: no links in or out — an idea you haven't finished`,
+  );
 
 // ── Relation mix ──────────────────────────────────────────────────────────
 const mix = {};
