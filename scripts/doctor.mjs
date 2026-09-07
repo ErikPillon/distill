@@ -109,6 +109,24 @@ const bySource = {};
 for (const n of notes)
   for (const s of n.data.sources ?? []) (bySource[s] ??= []).push(n.id);
 
+// A topic that lands on most of one source's notes isn't a topic, it's a
+// source tag in disguise — `sources:` already does that job, and it can never
+// narrow anything down.
+for (const [src, owned] of Object.entries(bySource)) {
+  if (owned.length < 6) continue;
+  const here = {};
+  for (const id of owned) {
+    const n = notes.find((x) => x.id === id);
+    for (const t of n.data.topics ?? []) here[t] = (here[t] ?? 0) + 1;
+  }
+  for (const [t, k] of Object.entries(here))
+    if (k / owned.length > 0.5)
+      warn.push(
+        `topic "${t}" is on ${k}/${owned.length} of ${src}'s notes — that's a ` +
+          `source tag, not a topic. It can't narrow anything.`,
+      );
+}
+
 const inSomeDeck = new Set();
 for (const s of sources) {
   const cards = s.data.cards ?? [];

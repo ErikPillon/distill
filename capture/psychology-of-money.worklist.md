@@ -6,8 +6,8 @@ more notes — or when you decide it becomes none, which is also a decision.
 Mark `- [x]` and add `→ note-slug, other-note-slug` after it.
 
 - [x] **01.** Finance is not like other sciences because is driven by people's behaviour (that is inherently irrational): hence, we cannot use the natural laws to deal with the market but instead we have to use the human laws. → finance-is-a-social-science, finance-follows-human-laws, human-drives-are-irrational
-- [ ] **02.** Hisotry never reapt itself. People always do. ~Voltaire
-- [ ] **03.** People skills are more important than the technical side of money
+- [x] **02.** Hisotry never reapt itself. People always do. ~Voltaire → no note: quote lives in the body of finance-is-a-social-science; dangling link to macroeconomy-behaves-in-cycles awaits Dalio
+- [x] **03.** People skills are more important than the technical side of money → behaviour-beats-technique
 - [ ] **04.** Our personal na dpast experiences (inflationary periods, financial crises, economical booms) deeply affect how we deal with money and life expectations
 - [ ] **05.** In life, like in investing, one must be able to distinguish/decouple effort and outcome: fortune is always lurking around. Behind every successful story/personality there's always a big gamble. Don't obsess over single exceptional cases, focus instead on the trend/pattern and the general law.
 - [ ] **06.** Your biggest enemies while accumulating wealth are ego and greed
