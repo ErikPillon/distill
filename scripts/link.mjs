@@ -43,8 +43,12 @@ if (!existsSync(path)) {
 }
 
 const { data } = parse(path);
-if ((data.links ?? []).some((l) => l.to === to)) {
-  console.error(`${from} already links to ${to} — edit the file to change it`);
+const already = (data.links ?? []).some((l) => l.to === to);
+if (already && !args.force) {
+  console.error(
+    `${from} already links to ${to} — pass --force to replace that edge ` +
+      `(use it to add reasoning you left off the first time)`,
+  );
   process.exit(1);
 }
 
@@ -54,7 +58,20 @@ const reverse = collection(NOTES).find(
   (n) => n.id === to && (n.data.links ?? []).some((l) => l.to === from),
 );
 
-const raw = readFileSync(path, 'utf8');
+let raw = readFileSync(path, 'utf8');
+
+// Replacing: drop the existing entry for this target first. An entry runs from
+// its `- to:` line until the next one or the close of the frontmatter.
+if (already) {
+  const fmEnd = raw.indexOf('\n---', 3);
+  const fm = raw.slice(0, fmEnd);
+  const lines = fm.split('\n');
+  const start = lines.findIndex((l) => l.trim() === `- to: ${to}`);
+  let stop = start + 1;
+  while (stop < lines.length && !/^\s*- to:/.test(lines[stop])) stop++;
+  lines.splice(start, stop - start);
+  raw = lines.join('\n') + raw.slice(fmEnd);
+}
 const end = raw.indexOf('\n---', 3); // close of frontmatter
 if (end < 0) {
   console.error(`${path}: malformed frontmatter`);

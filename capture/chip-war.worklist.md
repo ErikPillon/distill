@@ -12,5 +12,5 @@ Mark `- [x]` and add `→ note-slug, other-note-slug` after it.
 - [x] **05.** Most of the history of chip development is an engineering problem, not a physics one (refining processes and trial-error were more important than costly inventing new technologies) → chips-improvement-is-an-engineering-problem
 - [x] **06.** Chip development followed since the early beginnings an exponential growth and this law proved inexorable over time (=> Wright law?) → costs-fall-as-production-grows-wrights-law, microchip-density-grows-exponentially-over-time-moores-law
 - [x] **07.** "Catching up and overtaking " startegy condemned non-innovative countries to always fall behind. Enterpreneurial, collaborative and disruptive spirits proved necessary to build world class sustainable ecosystems → copying-technology-makes-you-fall-behind
-- [ ] **08.** The need to preserve technological supremacy helped maintaining military advantage and viceversa
+- [x] **08.** The need to preserve technological supremacy helped maintaining military advantage and viceversa → military-and-technology-create-synergy
 - [ ] **09.** technological collaboration agreements shape geopolitical alliences and tensions.
