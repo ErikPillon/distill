@@ -9,8 +9,8 @@ Mark `- [x]` and add `→ note-slug, other-note-slug` after it.
 - [x] **02.** Even if the syslicon valley is not anymore the leading chip-producing region in the world, eveything still relies on software and customers that belongs in the sylicon valley → chip-world-depends-on-silicon-valley
 - [x] **03.** Silicon Valley=Military Need + California Know how + entrpreneurial/talent attraction mindset → maximise-innovation-to-create-geopolitical-strength, talent-capital-and-mindset-created-silicon-valley
 - [x] **04.** Most successfull innovations were born through the upgrade to general purpose technologies from specific problems solutions. → biggest-innovations-are-simple-generalisations
-- [ ] **05.** Most of the history of chip development is an engineering problem, not a physics one (refining processes and trial-error were more important than costly inventing new technologies)
-- [ ] **06.** Chip development followed since the early beginnings an exponential growth and this law proved inexorable over time (=> Wright law?)
-- [ ] **07.** "Catching up and overtaking " startegy condemned non-innovative countries to always fall behind. Enterpreneurial, collaborative and disruptive spirits proved necessary to build world class sustainable ecosystems
+- [x] **05.** Most of the history of chip development is an engineering problem, not a physics one (refining processes and trial-error were more important than costly inventing new technologies) → chips-improvement-is-an-engineering-problem
+- [x] **06.** Chip development followed since the early beginnings an exponential growth and this law proved inexorable over time (=> Wright law?) → costs-fall-as-production-grows-wrights-law, microchip-density-grows-exponentially-over-time-moores-law
+- [x] **07.** "Catching up and overtaking " startegy condemned non-innovative countries to always fall behind. Enterpreneurial, collaborative and disruptive spirits proved necessary to build world class sustainable ecosystems → copying-technology-makes-you-fall-behind
 - [ ] **08.** The need to preserve technological supremacy helped maintaining military advantage and viceversa
 - [ ] **09.** technological collaboration agreements shape geopolitical alliences and tensions.
